@@ -9,7 +9,7 @@ Literal -> String | Number
 Expr -> Product (+ Product)* | Product (- Product)*
 Product -> Unary (x Unary)* | Unary (/ Unary)*
 Unary -> -* Q | Q
-Q -> Literal
+Q -> Literal | '('Expr')'
 
 5 * 2 + 3
 (7 * 2) + (5 * 4)

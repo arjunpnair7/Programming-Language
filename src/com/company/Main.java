@@ -28,10 +28,7 @@ public class Main {
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
-
-            //System.out.println(userInput);
         }
-
     }
 
     public static void printTokens(List<Token> tokens) {
@@ -39,8 +36,4 @@ public class Main {
             System.out.println(curr);
         }
     }
-
-
-
-
 }

@@ -1,5 +1,4 @@
 package com.company;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +16,11 @@ public class Lexer {
     }
 
     List<Token> tokenizeSourceCode() throws Exception {
-        for (current = 0; current < source.length(); current++) {
+        while ( current < source.length()) {
             char curr = source.charAt(current);
             switch (curr) {
                 case ' ':
-                    continue;
+                    break;
                 case '\n':
                     currentLineNumber++;
                     continue;
@@ -46,14 +45,14 @@ public class Lexer {
                 default:
                     if (Character.isDigit(curr)) {
                         tokenizeNumber();
+                        continue;
                     } else if (curr == '"') {
                         tokenizeString();
                     } else {
-                        System.out.println("Unknown error");
+                        System.err.println("Unrecognized token");
                     }
-
-
             }
+            current++;
         }
         return tokens;
     }
@@ -74,7 +73,6 @@ public class Lexer {
             throw new Exception("Unterminated string on line number: " + currentLineNumber);
         }
         tokens.add(new Token(TokenType.STRING, (String) runningString.toString()));
-
     }
 
     public void tokenizeNumber() throws Exception {
@@ -94,10 +92,5 @@ public class Lexer {
             }
             tokens.add(new Token(TokenType.NUMBER, Double.parseDouble(runningString.toString())));
         }
-
     }
-
-
-
-
 }

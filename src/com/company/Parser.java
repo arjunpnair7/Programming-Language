@@ -15,6 +15,9 @@ public class Parser {
 
     public Expr Expression() {
         Expr left = Product();
+        if (current == tokens.size()) {
+            return left;
+        }
         while (tokens.get(current).type == TokenType.MINUS || tokens.get(current).type == TokenType.PLUS) {
             Token operator = tokens.get(current);
             current++;
@@ -23,7 +26,6 @@ public class Parser {
             if (current == tokens.size()) {
                 break;
             }
-
         }
         return left;
     }
@@ -33,17 +35,17 @@ public class Parser {
         if (current == tokens.size()) {
             return left;
         }
-        while (tokens.get(current).type == TokenType.MULTIPLY || tokens.get(current).type == TokenType.DIVIDE) {
+        while (current != tokens.size() && (tokens.get(current).type == TokenType.MULTIPLY || tokens.get(current).type == TokenType.DIVIDE)) {
             Token operator = tokens.get(current);
-            Expr right = Product();
-            left = new Expr.Binary(left, right, operator);
             current++;
+            Expr right = Unary();
+            left = new Expr.Binary(left, right, operator);
         }
         return left;
     }
 
     public Expr Unary()  {
-        if (tokens.get(current).type == TokenType.MINUS) {
+        if (current != tokens.size() && tokens.get(current).type == TokenType.MINUS) {
             Token operator = tokens.get(current);
             current++;
             Expr right = Unary();
@@ -54,17 +56,26 @@ public class Parser {
     }
 
     public Expr Literal() {
-        if (tokens.get(current).type == TokenType.NUMBER) {
-            current++;
-            return new Expr.Literal(tokens.get(current - 1).tokenValue);
-        } else  {
-            current++;
-            return new Expr.Literal(tokens.get(current - 1).tokenValue);
+        switch (tokens.get(current).type) {
+            case NUMBER, STRING -> {
+                current++;
+                return new Expr.Literal(tokens.get(current - 1).tokenValue);
+            }
+            case LPAREN -> {
+                current++;
+                Expr paren =  Expression();
+                if (tokens.get(current).type == TokenType.RPAREN) {
+                    current++;
+                    return paren;
+                } else {
+                    System.err.println("Unterminated parentheses");
+                    return paren;
+                }
+            }
+            default -> {
+                current++;
+                return new Expr.Literal(tokens.get(current - 1).tokenValue);
+            }
         }
     }
-
-
-
-
-
 }

@@ -15,7 +15,6 @@ public abstract class Expr {
         Token operator;
         public Object accept(vistor visitor) {
             return visitor.visitBinary(this);
-            //return null;
         }
         public Binary(Expr left, Expr right, Token operator) {
             this.left = left;
@@ -29,7 +28,6 @@ public abstract class Expr {
         Token operator;
         public Object accept(vistor visitor) {
             return visitor.visitUnary(this);
-            //return null;
         }
 
         public Unary(Expr right, Token operator) {
@@ -42,7 +40,6 @@ public abstract class Expr {
         Object value;
         public Object accept(vistor visitor) {
             return visitor.visitLiteral(this);
-            //return null;
         }
         public Literal(Object value) {
             this.value = value;
