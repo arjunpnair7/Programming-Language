@@ -13,6 +13,25 @@ public class Parser {
         current = 0;
     }
 
+    public TokenType getCurrentTokenType() {
+        if (current <= tokens.size()) {
+            return tokens.get(current).type;
+        } else {
+            return null;
+            //CHANGE THIS!!!
+        }
+    }
+
+    public Expr Statement() throws Exception {
+        //if (current < tokens.size() && tokens.get(current).type == )
+        Expr expression = Expression();
+        if (current >= tokens.size() || tokens.get(current).type != TokenType.SEMICOLON) {
+            throw new Exception("Unterminated Statement");
+        }
+        current++;
+        return expression;
+    }
+
     public Expr Expression() {
         Expr left = Product();
         if (current == tokens.size()) {

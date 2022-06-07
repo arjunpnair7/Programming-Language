@@ -1,23 +1,9 @@
 
-
-Expression -> Binary | Unary | Number
-Binary -> Expression (+ | - | * | /) Expression
-Unary -> (-)* Expression
-Literal -> String | Number
-
-
+Statement -> Expr ;
 Expr -> Product (+ Product)* | Product (- Product)*
 Product -> Unary (x Unary)* | Unary (/ Unary)*
 Unary -> -* Q | Q
 Q -> Literal | '('Expr')'
+Literal -> STRING | NUMBER | IDENTIFIER
 
-5 * 2 + 3
-(7 * 2) + (5 * 4)
-3 - -7
-
-3 - 3 - 3
-3 - - - 7
-
-(3 + 4) * (1 + 2)
-
-- - 7
+Declaration -> var identifier = Expr ; | var identifier ;

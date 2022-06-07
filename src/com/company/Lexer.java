@@ -42,6 +42,9 @@ public class Lexer {
                 case '/':
                     tokens.add(new Token(TokenType.DIVIDE, String.valueOf(curr)));
                     break;
+                case ';':
+                    tokens.add(new Token(TokenType.SEMICOLON, String.valueOf(curr)));
+                    break;
                 default:
                     if (Character.isDigit(curr)) {
                         tokenizeNumber();
@@ -54,6 +57,7 @@ public class Lexer {
             }
             current++;
         }
+        tokens.add(new Token(TokenType.EOF, null));
         return tokens;
     }
 
@@ -72,7 +76,12 @@ public class Lexer {
         if (!terminatedString) {
             throw new Exception("Unterminated string on line number: " + currentLineNumber);
         }
-        tokens.add(new Token(TokenType.STRING, (String) runningString.toString()));
+        if (runningString.toString().equals("var")) {
+            tokens.add(new Token(TokenType.VARIABLE, (String) runningString.toString()));
+        } else {
+            tokens.add(new Token(TokenType.STRING, (String) runningString.toString()));
+        }
+
     }
 
     public void tokenizeNumber() throws Exception {

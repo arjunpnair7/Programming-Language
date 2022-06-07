@@ -1,12 +1,11 @@
 package com.company;
 
 public class Interpreter implements Expr.vistor  {
-    Expr AST;
-    public Interpreter(Expr AST) {
-        this.AST = AST;
-    }
 
-    public Object interpretTree() {
+    public Object interpretAST(Expr AST) {
+        return interpretTree(AST);
+    }
+    public Object interpretTree(Expr AST) {
         Object temp =  evaluate(AST);
         System.out.println(temp);
         return temp;
@@ -28,7 +27,7 @@ public class Interpreter implements Expr.vistor  {
                 } else if (left instanceof String && right instanceof String) {
                     return (String) left + (String) right;
                 } else {
-                    System.err.println("Cannot add " + left + " with " + right);
+                    System.err.println("Incompatible types: Cannot add " + left + " with " + right);
                 }
             }
             case MINUS -> {
@@ -40,7 +39,6 @@ public class Interpreter implements Expr.vistor  {
             case DIVIDE -> {
                 return (double) left / (double) right;
             }
-
         }
         return null;
     }
