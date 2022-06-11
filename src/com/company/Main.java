@@ -21,10 +21,10 @@ public class Main {
 
         Lexer lexer = new Lexer(srcCode);
         List<Token> list = lexer.tokenizeSourceCode();
-        List<Expr> expressionList = getProgramExpressions(list);
+        List<Declaration> expressionList = getProgramExpressions(list);
         Interpreter interpreter = new Interpreter();
 
-        for (Expr curr: expressionList) {
+        for (Declaration curr: expressionList) {
             interpreter.interpretAST(curr);
         }
     }
@@ -40,11 +40,11 @@ public class Main {
         return srcCode.toString();
     }
 
-    public static List<Expr> getProgramExpressions(List<Token> tokenList) throws Exception {
+    public static List<Declaration> getProgramExpressions(List<Token> tokenList) throws Exception {
         Parser parser = new Parser(tokenList);
-        List<Expr> expressionList = new ArrayList<>();
+        List<Declaration> expressionList = new ArrayList<>();
         while (parser.getCurrentTokenType() != TokenType.EOF) {
-            Expr AST = parser.Statement();
+            Declaration AST = parser.Program();
             expressionList.add(AST);
         }
         return expressionList;
@@ -63,7 +63,7 @@ public class Main {
         try {
             List<Token> list = lexer.tokenizeSourceCode();
             Parser p = new Parser(list);
-            Expr AST = p.Statement();
+            Declaration AST = p.Program();
             Interpreter interpreter = new Interpreter();
             interpreter.interpretTree(AST);
         } catch (Exception e) {

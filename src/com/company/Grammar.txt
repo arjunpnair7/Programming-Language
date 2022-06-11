@@ -1,9 +1,13 @@
 
-Statement -> Expr ;
-Expr -> Product (+ Product)* | Product (- Product)*
-Product -> Unary (x Unary)* | Unary (/ Unary)*
+Program -> Declaration*
+Declaration -> (VariableDeclaration | Statement) * ";"
+VariableDeclaration -> "var" identifier "=" Expr ";"
+Statement -> ExpressionStatement | PrintStatement
+ExpressionStatement -> Expr ";"
+PrintStatement -> "print " Expr ";"
+
+Expr -> Product|Identifier (+ Product|Identifier)* | Product|Identifier (- Product|Identifier)* | Statement
+Product -> Unary|Identifier (x Unary|Identifier)* | Unary|Identifier (/ Unary|Identifier)*
 Unary -> -* Q | Q
 Q -> Literal | '('Expr')'
-Literal -> STRING | NUMBER | IDENTIFIER
-
-Declaration -> var identifier = Expr ; | var identifier ;
+Literal -> STRING | NUMBER | IDENTIFIER | "var"

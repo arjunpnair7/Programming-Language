@@ -22,15 +22,55 @@ public class Parser {
         }
     }
 
-    public Expr Statement() throws Exception {
-        //if (current < tokens.size() && tokens.get(current).type == )
-        Expr expression = Expression();
-        if (current >= tokens.size() || tokens.get(current).type != TokenType.SEMICOLON) {
-            throw new Exception("Unterminated Statement");
-        }
-        current++;
-        return expression;
+
+
+    public Declaration Program() throws Exception {
+//        Expr expression;
+//        if (tokens.get(current).type == TokenType.VARIABLE) {
+//            current++;
+//            //expression = VariableStatement();
+//        } else if (tokens.get(current).type == TokenType.PRINT) {
+//            current++;
+//            //expression = PrintStatement();
+//        } else {
+//            expression = Expression();
+//        }
+//        return expression;
+        return Declaration();
     }
+
+    public Declaration Declaration() {
+        Declaration declaration = null;
+        if (getCurrentTokenType() == TokenType.VARIABLE) {
+            current++;
+            declaration = VariableDeclaration();
+            current++;
+            //if (getCurrentTokenType() == TokenType.SEMICOLON) {
+                return declaration;
+           // } //else {
+             //   System.out.println("UNTERMINATED STATEMENT: MISSING SEMICOLON");
+            //}
+        }
+        return null;
+    }
+
+    public Declaration VariableDeclaration() {
+        System.out.println(getCurrentTokenType().toString());
+        if (getCurrentTokenType() == TokenType.LITERAL) {
+            Expr initializer = null;
+            String identifier = (String) tokens.get(current).tokenValue;
+            current++;
+            if (getCurrentTokenType() == TokenType.ASSIGNMENT) {
+                current++;
+                initializer = Expression();
+            }
+            return new Declaration.VariableDeclaration(identifier, initializer);
+        } else {
+            System.out.println("ERROR WITH VARIABLE DECLARATION");
+            return null;
+        }
+    }
+
 
     public Expr Expression() {
         Expr left = Product();
@@ -80,6 +120,15 @@ public class Parser {
                 current++;
                 return new Expr.Literal(tokens.get(current - 1).tokenValue);
             }
+            case LITERAL -> {
+                current++;
+                return new Expr.Literal(tokens.get(current - 1).tokenValue);
+
+            }
+            case ASSIGNMENT -> {
+                current++;
+                return Expression();
+            }
             case LPAREN -> {
                 current++;
                 Expr paren =  Expression();
@@ -97,4 +146,5 @@ public class Parser {
             }
         }
     }
+
 }

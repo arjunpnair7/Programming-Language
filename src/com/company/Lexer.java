@@ -45,20 +45,42 @@ public class Lexer {
                 case ';':
                     tokens.add(new Token(TokenType.SEMICOLON, String.valueOf(curr)));
                     break;
+                case '=':
+                    tokens.add(new Token(TokenType.ASSIGNMENT, String.valueOf(curr)));
+                    break;
+
                 default:
                     if (Character.isDigit(curr)) {
                         tokenizeNumber();
                         continue;
                     } else if (curr == '"') {
                         tokenizeString();
+                    } else if (Character.isLetter(curr)) {
+                        tokenizeLiteral();
+                        continue;
                     } else {
                         System.err.println("Unrecognized token");
                     }
-            }
+            } // var a = 5;
             current++;
         }
         tokens.add(new Token(TokenType.EOF, null));
         return tokens;
+    }
+
+    public void tokenizeLiteral() {
+        StringBuilder result = new StringBuilder();
+        while (current < source.length() && Character.isLetter(source.charAt(current))) {
+            result.append(source.charAt(current));
+            current++;
+        }
+        if (result.toString().equals("var")) {
+            tokens.add(new Token(TokenType.VARIABLE, (String) result.toString()));
+        } else if (result.toString().equals("print")) {
+            tokens.add(new Token(TokenType.PRINT, (String) result.toString()));
+        } else {
+            tokens.add(new Token(TokenType.LITERAL, result.toString()));
+        }
     }
 
     public void tokenizeString() throws Exception {
@@ -76,12 +98,7 @@ public class Lexer {
         if (!terminatedString) {
             throw new Exception("Unterminated string on line number: " + currentLineNumber);
         }
-        if (runningString.toString().equals("var")) {
-            tokens.add(new Token(TokenType.VARIABLE, (String) runningString.toString()));
-        } else {
-            tokens.add(new Token(TokenType.STRING, (String) runningString.toString()));
-        }
-
+        tokens.add(new Token(TokenType.STRING, (String) runningString.toString()));
     }
 
     public void tokenizeNumber() throws Exception {
