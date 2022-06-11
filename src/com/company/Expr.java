@@ -2,18 +2,19 @@ package com.company;
 
 public abstract class Expr {
 
-    abstract Object accept(vistor vistor);
+    abstract Object accept(visitor vistor);
 
-    interface vistor {
+    interface visitor {
         Object visitBinary(Binary node);
         Object visitUnary(Unary node);
         Object visitLiteral(Literal node);
+        Object visitVariable(Variable node);
     }
     public static class Binary extends Expr {
         Expr left;
         Expr right;
         Token operator;
-        public Object accept(vistor visitor) {
+        public Object accept(visitor visitor) {
             return visitor.visitBinary(this);
         }
         public Binary(Expr left, Expr right, Token operator) {
@@ -23,10 +24,22 @@ public abstract class Expr {
         }
     }
 
+    public static class Variable extends Expr {
+        String identifier;
+        public Variable(String identifier) {
+            this.identifier = identifier;
+        }
+
+        @Override
+        Object accept(visitor visitor) {
+            return visitor.visitVariable(this);
+        }
+    }
+
     public static class Unary extends Expr {
         Expr right;
         Token operator;
-        public Object accept(vistor visitor) {
+        public Object accept(visitor visitor) {
             return visitor.visitUnary(this);
         }
 
@@ -38,7 +51,7 @@ public abstract class Expr {
 
     public static class Literal extends Expr {
         Object value;
-        public Object accept(vistor visitor) {
+        public Object accept(visitor visitor) {
             return visitor.visitLiteral(this);
         }
         public Literal(Object value) {

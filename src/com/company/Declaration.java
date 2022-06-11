@@ -3,7 +3,7 @@ package com.company;
 public abstract class Declaration {
     interface visitor {
         void visitVariableDeclaration(VariableDeclaration node);
-        void visitExpressionStatement(ExpressionStatement node);
+        Object visitExpressionStatement(ExpressionStatement node);
         void visitPrintStatement(PrintStatement node);
     }
     abstract Object accept(visitor visitor);
@@ -31,8 +31,8 @@ public abstract class Declaration {
 
         @Override
         Object accept(visitor visitor) {
-            visitor.visitExpressionStatement(this);
-            return null;
+            return visitor.visitExpressionStatement(this);
+            //return null;
         }
     }
 

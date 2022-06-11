@@ -44,14 +44,27 @@ public class Parser {
         if (getCurrentTokenType() == TokenType.VARIABLE) {
             current++;
             declaration = VariableDeclaration();
-            current++;
-            //if (getCurrentTokenType() == TokenType.SEMICOLON) {
+            //current++;
+            if (getCurrentTokenType() == TokenType.SEMICOLON) {
+            return declaration;
+            } else {
+                System.out.println("UNTERMINATED STATEMENT: MISSING SEMICOLON");
+            }
+        } else {
+//            declaration = Expression();
+            declaration =  ExpressionStatement();
+            if (getCurrentTokenType() == TokenType.SEMICOLON) {
                 return declaration;
-           // } //else {
-             //   System.out.println("UNTERMINATED STATEMENT: MISSING SEMICOLON");
-            //}
+            } else {
+                System.out.println("UNTERMINATED STATEMENT: MISSING SEMICOLON");
+            }
         }
         return null;
+    }
+
+    public Declaration ExpressionStatement() {
+        Expr expr = Expression();
+        return new Declaration.ExpressionStatement(expr);
     }
 
     public Declaration VariableDeclaration() {
@@ -122,8 +135,8 @@ public class Parser {
             }
             case LITERAL -> {
                 current++;
-                return new Expr.Literal(tokens.get(current - 1).tokenValue);
-
+                //return new Expr.Literal(tokens.get(current - 1).tokenValue);
+                return new Expr.Variable((String) tokens.get(current - 1).tokenValue);
             }
             case ASSIGNMENT -> {
                 current++;

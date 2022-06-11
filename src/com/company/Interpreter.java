@@ -1,8 +1,6 @@
 package com.company;
 
-import javax.crypto.EncryptedPrivateKeyInfo;
-
-public class Interpreter implements Expr.vistor, Declaration.visitor  {
+public class Interpreter implements Expr.visitor, Declaration.visitor  {
 
     private Environment programEnv;
 
@@ -72,6 +70,21 @@ public class Interpreter implements Expr.vistor, Declaration.visitor  {
         //return evaluate(node.value);
     }
 
+    @Override
+    public Object visitVariable(Expr.Variable node) {
+//        if (programEnv.checkIfVariableExists(node.identifier)) {
+//            return programEnv.accessVariable(node.identifier);
+//        } else {
+//            throw new Exception("UNDEFINED VARIABLE: " + node.identifier);
+//        }
+        try {
+            return programEnv.accessVariable(node.identifier);
+        } catch (Exception e) {
+            System.err.println("UNDEFINED VARIABLE: " + node.identifier);
+        }
+        return null;
+    }
+
 
     @Override
     public void visitVariableDeclaration(Declaration.VariableDeclaration node) {
@@ -80,8 +93,8 @@ public class Interpreter implements Expr.vistor, Declaration.visitor  {
     }
 
     @Override
-    public void visitExpressionStatement(Declaration.ExpressionStatement node) {
-        evaluate(node);
+    public Object visitExpressionStatement(Declaration.ExpressionStatement node) {
+        return evaluate(node.expr);
     }
 
     @Override

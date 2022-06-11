@@ -18,5 +18,9 @@ public class Environment {
         return envVariables.containsKey(identifier);
     }
 
+    public Object accessVariable(String identifier) {
+        return envVariables.get(identifier);
+    }
+
 
 }
