@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.List;
+
 public class Interpreter implements Expr.visitor, Declaration.visitor  {
 
     private Environment programEnv;
@@ -100,5 +102,27 @@ public class Interpreter implements Expr.visitor, Declaration.visitor  {
     @Override
     public void visitPrintStatement(Declaration.PrintStatement node) {
         System.out.println(evaluate(node).toString());
+    }
+
+    @Override
+    public void visitBlockStatement(Declaration.BlockStatement node) {
+//        for (Declaration declaration: node.declarationList) {
+//            System.out.println(evaluate(declaration));
+//        }
+        executeBlockStatement(node.declarationList, new Environment(programEnv));
+    }
+
+    public void executeBlockStatement(List<Declaration> declarationList, Environment env) {
+        Environment prev = this.programEnv;
+        try {
+            this.programEnv = env;
+            for (Declaration declaration: declarationList) {
+                System.out.println(evaluate(declaration));
+            }
+        } finally {
+            this.programEnv = prev;
+        }
+
+
     }
 }

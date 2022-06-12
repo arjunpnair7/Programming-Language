@@ -1,6 +1,7 @@
 package com.company;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
@@ -14,7 +15,9 @@ public class Parser {
     }
 
     public TokenType getCurrentTokenType() {
-        if (current <= tokens.size()) {
+        if (current < tokens.size()) {
+           // System.out.println(tokens.size());
+           // System.out.println(current);
             return tokens.get(current).type;
         } else {
             return null;
@@ -36,31 +39,68 @@ public class Parser {
 //            expression = Expression();
 //        }
 //        return expression;
+        if (getCurrentTokenType() != TokenType.LB) {
+            //System.out.println("MISSING '{': CODE MUST BE WRAPPED IN A BLOCK USING '{' AND '}'");
+            throw new Exception("MISSING '{': CODE MUST BE WRAPPED IN A BLOCK USING '{' AND '}'");
+        }
         return Declaration();
     }
 
-    public Declaration Declaration() {
+    public Declaration BlockStatement() throws Exception {
+        Declaration declaration = null;
+        List<Declaration> declarationList = new ArrayList<>();
+        if (getCurrentTokenType() != TokenType.LB) {
+            System.out.println("MISSING STARTING '{' OF BLOCK");
+        } else {
+            current++;
+//            if (getCurrentTokenType() == TokenType.LB) {
+//                return Declaration();
+//            }
+
+            while (getCurrentTokenType() != TokenType.RB && current < tokens.size()) {
+                declarationList.add(Declaration());
+            }
+            System.out.println("CURRENT: " + getCurrentTokenType());
+            if (getCurrentTokenType() != TokenType.RB) {
+                throw new Exception("Expected '}'");
+            }
+            declaration = new Declaration.BlockStatement(declarationList);
+            current++;
+        }
+        return declaration;
+    }
+
+    public Declaration Declaration() throws Exception {
         Declaration declaration = null;
         if (getCurrentTokenType() == TokenType.VARIABLE) {
             current++;
             declaration = VariableDeclaration();
             //current++;
             if (getCurrentTokenType() == TokenType.SEMICOLON) {
+                current++;
             return declaration;
             } else {
                 System.out.println("UNTERMINATED STATEMENT: MISSING SEMICOLON");
             }
+        } else if(getCurrentTokenType() == TokenType.LB) {
+            declaration = BlockStatement();
+            System.out.println(getCurrentTokenType());
         } else {
 //            declaration = Expression();
             declaration =  ExpressionStatement();
             if (getCurrentTokenType() == TokenType.SEMICOLON) {
+                current++;
                 return declaration;
             } else {
                 System.out.println("UNTERMINATED STATEMENT: MISSING SEMICOLON");
             }
         }
-        return null;
+        return declaration;
     }
+
+//    public Declaration BlockStatement() {
+//
+//    }
 
     public Declaration ExpressionStatement() {
         Expr expr = Expression();
@@ -142,6 +182,10 @@ public class Parser {
                 current++;
                 return Expression();
             }
+//            case LB -> {
+//                current++;
+//                return Block();
+//            }
             case LPAREN -> {
                 current++;
                 Expr paren =  Expression();
@@ -159,5 +203,4 @@ public class Parser {
             }
         }
     }
-
 }

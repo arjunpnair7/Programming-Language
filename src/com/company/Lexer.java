@@ -30,6 +30,12 @@ public class Lexer {
                 case ')':
                     tokens.add(new Token(TokenType.RPAREN, String.valueOf(curr)));
                     break;
+                case '{':
+                    tokens.add(new Token(TokenType.LB, String.valueOf(curr)));
+                    break;
+                case '}':
+                    tokens.add(new Token(TokenType.RB, String.valueOf(curr)));
+                    break;
                 case '+':
                     tokens.add(new Token(TokenType.PLUS, String.valueOf(curr)));
                     break;

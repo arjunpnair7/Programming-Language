@@ -1,12 +1,28 @@
 package com.company;
 
+import java.util.List;
+
 public abstract class Declaration {
     interface visitor {
         void visitVariableDeclaration(VariableDeclaration node);
         Object visitExpressionStatement(ExpressionStatement node);
         void visitPrintStatement(PrintStatement node);
+        void visitBlockStatement(BlockStatement node);
     }
     abstract Object accept(visitor visitor);
+
+    static class BlockStatement extends Declaration {
+        List<Declaration> declarationList;
+        public BlockStatement(List<Declaration> declarationList) {
+            this.declarationList = declarationList;
+        }
+
+        @Override
+        Object accept(visitor visitor) {
+            visitor.visitBlockStatement(this);
+            return null;
+        }
+    }
 
     static class VariableDeclaration extends Declaration {
         String identifier;

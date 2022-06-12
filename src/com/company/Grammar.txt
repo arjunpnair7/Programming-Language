@@ -1,13 +1,28 @@
 
 Program -> Declaration*
-Declaration -> (VariableDeclaration | Statement) * ";"
+Declaration -> (VariableDeclaration | Statement | Block) * ";"
 VariableDeclaration -> "var" identifier "=" Expr ";"
 Statement -> ExpressionStatement | PrintStatement
 ExpressionStatement -> Expr ";"
 PrintStatement -> "print " Expr ";"
+BlockStatement -> '{' Declaration* '}'
+
 
 Expr -> Product|Identifier (+ Product|Identifier)* | Product|Identifier (- Product|Identifier)* | Statement
 Product -> Unary|Identifier (x Unary|Identifier)* | Unary|Identifier (/ Unary|Identifier)*
 Unary -> -* Q | Q
 Q -> Literal | '('Expr')'
 Literal -> STRING | NUMBER | IDENTIFIER | "var"
+
+//Each block holds a list of declarations
+//A block's child can be another block
+
+{
+var a = 5;
+ {
+ var b = 10;
+ var c = a + b;
+ }
+}
+
+

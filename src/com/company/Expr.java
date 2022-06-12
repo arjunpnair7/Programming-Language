@@ -2,7 +2,7 @@ package com.company;
 
 public abstract class Expr {
 
-    abstract Object accept(visitor vistor);
+    abstract Object accept(visitor visitor);
 
     interface visitor {
         Object visitBinary(Binary node);
